@@ -1,0 +1,56 @@
+<html>
+
+<body>
+
+  <input type="text" name="firstname" id="input">
+  <button id="search">Search</button>
+
+  <div id="album"></div>
+
+  <script>
+  var searchButton = document.querySelector("#search");
+  searchButton.addEventListener("click", function(){
+
+    var input = document.querySelector("#input").value;
+    var freeApi = "&api_key=dc6zaTOxFJmzC";
+    var urlSafe = encodeURI(input);
+
+    var url = "http://api.giphy.com/v1/gifs/search?q="+urlSafe+freeApi
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.addEventListener('load', function(e) {
+      var data = JSON.parse(xhr.responseText);
+      var dataAry = data['data'];
+      console.log(dataAry);
+
+      var counter = 0;
+      var album = document.querySelector("#album");
+      var img = document.createElement("img");
+      album.appendChild(img);
+      img.src = dataAry[counter]['images']['original']['url'];
+
+      var nextButton = document.createElement("button");
+      album.appendChild(nextButton);
+      nextButton.innerHTML = "Next Pic";
+      
+      var backButton = document.createElement("button");
+      album.appendChild(backButton);
+      backButton.innerHTML = "Last Pic";
+
+      nextButton.addEventListener("click", function(){
+        counter++;
+        img.src = dataAry[counter]['images']['original']['url'];
+      })
+      backButton.addEventListener("click", function(){
+        counter--;
+        img.src = dataAry[counter]['images']['original']['url'];
+      });
+    });
+
+    xhr.send();
+  })
+
+  </script>
+</body>
+</html>
